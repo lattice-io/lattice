@@ -1,0 +1,1 @@
+import os, sys; os.environ.get('LATTICE_AUTOPATCH') and __import__('lattice_autopatch.bootstrap') and sys.modules['lattice_autopatch.bootstrap'].bootstrap()

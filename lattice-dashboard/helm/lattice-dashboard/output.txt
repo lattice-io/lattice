@@ -1,0 +1,122 @@
+NAME: dashboard
+LAST DEPLOYED: Tue Feb  7 19:43:50 2023
+NAMESPACE: lattice
+STATUS: pending-install
+REVISION: 1
+TEST SUITE: None
+HOOKS:
+MANIFEST:
+---
+# Source: lattice-dashboard/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: lattice-dashboard
+  labels:
+    helm.sh/chart: lattice-dashboard-0.0.1
+    app.kubernetes.io/name: lattice-dashboard
+    app.kubernetes.io/instance: dashboard
+    app.kubernetes.io/version: "v0.1.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: lattice-dashboard/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dockersecret4latticedashboard
+  namespace: lattice
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJicmVlemVtbC5qZnJvZy5pbyI6eyJhdXRoIjoiYkdWbVlXNTZRR0p5WldWNlpXMXNMbUZwT2xwc1psOHhNak5mTkRVMiJ9fX0=
+---
+# Source: lattice-dashboard/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lattice-dashboard
+data:
+  DJANGO_ALLOWED_HOSTS: "*"
+  DEBUG: "True"
+  LATTICE_NAMESPACE: "lattice"
+---
+# Source: lattice-dashboard/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: lattice-dashboard
+  labels:
+    chart: "lattice-dashboard-0.0.1"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: lattice-dashboard
+---
+# Source: lattice-dashboard/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lattice-dashboard
+  labels:
+    app: lattice-dashboard
+    chart: "lattice-dashboard-0.0.1"
+  namespace: lattice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lattice-dashboard
+  template:
+    metadata:
+      labels:
+        app: lattice-dashboard
+        chart: "lattice-dashboard-0.0.1"
+    spec:
+      serviceAccountName: lattice-dashboard
+      securityContext:
+        {}
+      containers:
+        - name: lattice-dashboard
+          securityContext:
+            {}
+          image: "breezeml.jfrog.io/breezeml-docker/lattice-dashboard:v0.1.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: NAMESPACE
+              value: lattice
+            - name: API_GROUP
+              value: breezeml.ai
+            - name: API_VERSION
+              value: v1
+          envFrom:
+            - secretRef:
+                name: lattice-dashboard
+            - configMapRef:
+                name: lattice-dashboard
+          livenessProbe:
+            httpGet:
+              path: /backend/probe/
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /backend/probe/
+              port: http
+          resources:
+            {}
+      imagePullSecrets:
+        - name: dockersecret4latticedashboard
+
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace lattice -l "app.kubernetes.io/name=lattice-dashboard,app.kubernetes.io/instance=dashboard" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace lattice $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace lattice port-forward $POD_NAME 8080:$CONTAINER_PORT

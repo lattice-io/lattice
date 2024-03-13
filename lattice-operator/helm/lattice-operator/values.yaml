@@ -1,0 +1,65 @@
+# Default values for lattice-operator.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+group: breezeml.ai
+
+image: 
+  repository: breezeml.jfrog.io/breezeml-docker/lattice-operator
+  # if you wish to use a specific version of lattice-operator, please modify the tag field
+  # tag: latest
+
+imagePullPolicy: IfNotPresent
+
+# Users should replace their license
+license: 00000000-0000-0000-0000-000000000000
+
+service:
+  type: ClusterIP
+  externalPort: 8080
+  internalPort: 8080
+  probePort: 8081
+
+  enablePrometheus: false
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+addon:
+  checkpointType: remote
+  checkpointEndpoint: lattice-checkpoint-svc.lattice
+  checkpointPort: "5555"
+
+agent:
+  rendezvousBackend: etcd
+  rendezvousEndpoint: lattice-rdzv-client.lattice
+  rendezvousPort: "2379"
+
+nodeSelector: {}
+
+affinity: {}
+
+jobNodeSelector: {}
+
+jobResourceUnit: node
+
+terminationGracePeriodSeconds: 10
+
+# If you wish to manage a different namespace, please uncomment and modify the monitorNamespace field
+# monitorNamespace: "lattice"
+
+# You need to have a JFrog account with granted access to the breezeml.jfrog.io repo.
+# Please modify the fields under "jfrog" as specified in the comments.
+# WARNING: NEVER UPLOAD THIS FILE AFTER FILLING IN YOUR JFROG CREDENTIALS
+jfrog:
+  secretName: jfrogsecret  # Normally it doesn't need modification unless there's a k8s resource name conflict
+  dockerSecretName: dockersecret  # Normally it doesn't need modification unless there's a k8s resource name conflict
+  username: ToBeConfigured  # Please modify this field. For example, if your JFrog username is "example@gmail.com", put the output of "echo -n 'example@gmail.com' | base64" here.
+  password: ToBeConfigured  # Please modify this field. For example, if your JFrog password is "password", put the output of "echo -n 'password' | base64" here.

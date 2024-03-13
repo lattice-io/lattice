@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}-job-node-selector
+  namespace: {{ .Release.Namespace }}
+data:
+  job-node-selector.conf: |
+    {{- range $key, $value := .Values.jobNodeSelector }}
+      {{ $key }}={{ $value }}
+    {{- end }}

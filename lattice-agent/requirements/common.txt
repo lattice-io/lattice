@@ -1,0 +1,5 @@
+GPUtil
+python-etcd
+requests
+prometheus-client
+kubernetes

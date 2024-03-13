@@ -1,0 +1,12 @@
+processor:
+  ignoreTypes:
+    # Disable MX, TF, XGBoost, MPI
+    - "(MXJob|MPIJob|TFJob|XGBoostJob)$"
+    - "(MXJob|MPIJob|TFJob|XGBoostJob)List$"
+    - "JobModeType$"
+    - "SuccessPolicy$"
+    # Disable elastic policy for pytorch
+    - "(ElasticPolicy|RDZVBackend|RDZVConf)$"
+
+render:
+  kubernetesVersion: "1.22"

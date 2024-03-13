@@ -1,0 +1,20 @@
+apiVersion: "breezeml.ai/v1"
+kind: TrainingJob
+metadata:
+  name: lattice-resnet
+  namespace: lattice
+spec:
+  runPolicy:
+    cleanPodPolicy: "None"
+  minSize: 1
+  maxSize: 2
+  injectLattice: true
+  # injectLattice: false  # optional, set to false by default
+  replicaSpecs:
+    template:
+      spec:
+        containers:
+          - name: trainingjob
+            image: breezeml/lattice-resnet
+            imagePullPolicy: Always
+            command: ["python", "-u", "main.py"]

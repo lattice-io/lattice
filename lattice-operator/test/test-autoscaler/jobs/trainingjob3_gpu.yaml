@@ -1,0 +1,26 @@
+apiVersion: "breezeml.ai/v1"
+kind: TrainingJob
+metadata:
+  name: lattice-simple3
+  namespace: lattice
+spec:
+  runPolicy:
+    cleanPodPolicy: "All"
+  minSize: 3
+  maxSize: 5
+  injectLattice: false
+  replicaSpecs:
+    template:
+      spec:
+        containers:
+          - name: trainingjob
+            image: ubuntu:18.04
+            imagePullPolicy: Always
+            command:
+              - sleep
+            args: ["20"]
+            resources:
+              requests:
+                nvidia.com/gpu: 2
+              limits:
+                nvidia.com/gpu: 2

@@ -1,0 +1,35 @@
+@import 'theme.css';
+
+.wy-side-nav-search {
+  display: block;
+  width: 300px;
+  padding: .809em;
+  margin-bottom: .809em;
+  z-index: 200;
+  text-align: center;
+  color: #fcfcfc;
+  background-color: transparent;
+}
+
+.wy-nav-side {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 2em;
+  width: 300px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-height: 100%;
+  color: #9b9b9b;
+  background: #101D2D;
+  z-index: 200;
+}
+
+.primary {
+  font-weight: bolder;
+  background-color: #FFFF00;
+  display: inline-block;
+  line-height: 0em;
+  padding-bottom: 0.5em;
+}

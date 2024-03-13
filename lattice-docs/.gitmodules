@@ -1,0 +1,3 @@
+[submodule "modules/operator"]
+	path = modules/operator
+	url = https://github.com/breezeml/lattice-operator

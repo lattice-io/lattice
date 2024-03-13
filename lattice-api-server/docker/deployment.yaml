@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lattice-api-server
+  namespace: lattice-dashboard
+  labels:
+    name: lattice-api-server
+spec:
+  selector:
+    matchLabels:
+      name: lattice-api-server
+  template:
+    metadata:
+      labels:
+        name: lattice-api-server
+    spec:
+      containers:
+        - name: lattice-api-server
+          image: lattice-api-server:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080

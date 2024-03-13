@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  replicas: {{ default 1 .Values.replicaCount | int }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+      annotations:
+        sidecar.istio.io/inject: "false"
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        args:
+          - "--namespace"
+          - "{{ .Values.monitorNamespace | default .Release.Namespace }}"
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+          - containerPort: {{ .Values.service.internalPort | int }}
+        env:
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: ADDONS_CHECKPOINT_TYPE
+            value: {{ .Values.addon.checkpointType }}
+          - name: CHECKPOINT_SERVICE_ENDPOINT
+            value: {{ .Values.addon.checkpointEndpoint }}
+          - name: CHECKPOINT_SERVICE_PORT
+            value: {{ .Values.addon.checkpointPort | quote }}
+          - name: RDZV_BACKEND
+            value: {{ .Values.agent.rendezvousBackend }}
+          - name: RDZV_SERVICE_ENDPOINT
+            value: {{ .Values.agent.rendezvousEndpoint }}
+          - name: RDZV_SERVICE_PORT
+            value: {{ .Values.agent.rendezvousPort | quote }}
+          - name: JOB_NODE_SELECTOR_CONFIGMAP
+            value: {{ .Chart.Name }}-job-node-selector
+          - name: RESOURCE_SCHEDULING_UNIT
+            value: {{ .Values.jobResourceUnit }}
+          - name: LATTICE_LICENSE
+            value: {{ .Values.license }}
+          - name: LATTICE_JOB_NODE_SELECTOR_PATH
+            value: /etc/config/job-node-selector.conf
+          - name: LATTICE_JFROG_SECRET_PATH
+            value: /etc/config/jfrog-secret/
+        securityContext:
+          allowPrivilegeEscalation: false
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.service.probePort | int }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: {{ .Values.service.probePort | int }}
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 3
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+          - name: {{ .Chart.Name }}-job-node-selector
+            mountPath: /etc/config/job-node-selector.conf
+            subPath: job-node-selector.conf
+          - name: {{ .Chart.Name }}-jfrog-secret
+            mountPath: /etc/config/jfrog-secret/
+      serviceAccountName: {{ .Chart.Name }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | int}}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+{{- if .Values.jfrog.dockerSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.jfrog.dockerSecretName }}
+{{- end }}
+      volumes:
+        - name: {{ .Chart.Name }}-job-node-selector
+          configMap:
+            name: {{ .Chart.Name }}-job-node-selector
+            defaultMode: 420
+        - name: {{ .Chart.Name }}-jfrog-secret
+          secret:
+            secretName: {{ .Values.jfrog.secretName }}
+            defaultMode: 420

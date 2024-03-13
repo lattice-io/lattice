@@ -1,0 +1,14 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: test-autoscaler
+  region: us-west-2
+
+managedNodeGroups:
+  - name: system-nodes
+    instanceType: m5.xlarge
+    desiredCapacity: 5
+    iam:
+      withAddonPolicies:
+        cloudWatch: true

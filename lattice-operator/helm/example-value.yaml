@@ -1,0 +1,6 @@
+nodeSelector:
+  eks.amazonaws.com/nodegroup: system-nodes
+monitorNamespace: lattice-public
+imagePullSecretName: lattice-docker-repo
+service:
+  enablePrometheus: true

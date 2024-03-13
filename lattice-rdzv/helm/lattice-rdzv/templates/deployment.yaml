@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  replicas: {{ default 1 .Values.replicaCount | int }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+          - /usr/local/bin/etcd
+          - --data-dir
+          - /var/lib/etcd
+          - --enable-v2
+          - --name
+          - etcd-server
+          - --listen-client-urls
+          - "http://0.0.0.0:{{ .Values.clientService.internalPort }}"
+          - --listen-peer-urls
+          - "http://0.0.0.0:{{ .Values.serverService.serverPort.internalPort }}"
+          - --initial-advertise-peer-urls
+          - "http://{{ .Values.serverService.name }}:{{ .Values.serverService.serverPort.internalPort }}"
+          - --advertise-client-urls
+          - "http://{{ .Values.serverService.name }}:{{ .Values.serverService.clientPort.internalPort }}"
+          - --initial-cluster
+          - "etcd-server=http://{{ .Values.serverService.name }}:{{ .Values.serverService.serverPort.internalPort }}"
+          - --initial-cluster-state
+          - new
+        ports:
+        - containerPort: {{ .Values.serverService.clientPort.internalPort }}
+          name: client
+          protocol: TCP
+        - containerPort: {{ .Values.serverService.serverPort.internalPort }}
+          name: server
+          protocol: TCP
+{{- if .Values.resources }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}

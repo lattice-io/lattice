@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: {{ .Chart.Name }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    spec:
+      serviceAccountName: {{ .Chart.Name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.internalPort }}
+              protocol: TCP
+          env:
+            - name: NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: API_GROUP
+              value: {{ .Values.APIGroup }}
+            - name: API_VERSION
+              value: {{ .Values.APIVersion }}
+            - name: PROMETHEUS_ENDPOINT
+              value: {{ .Values.prometheus.endpoint }}
+            - name: PROMETHEUS_QUERY_RANGE
+              value: {{ .Values.prometheus.queryRange }}
+            - name: PROMETHEUS_QUERY_RESOLUTION
+              value: {{ .Values.prometheus.queryResolution }}
+            - name: LOKI_ENDPOINT
+              value: {{ .Values.loki.endpoint }}
+            - name: LOKI_LIMIT
+              value: {{ .Values.loki.limit | quote }}
+            - name: AWS_S3_BUCKET
+              value: {{ .Values.aws.s3.bucket }}
+            - name: AWS_S3_SERVICE_ACCOUNT
+              value: {{ .Values.aws.s3.serviceAccount }}
+            - name: AWS_REGION
+              value: {{ .Values.aws.region }}
+            - name: AWS_EKS_CLUSTER_NAME
+              value: {{ .Values.aws.cluster }}
+            - name: AWS_EKS_WORKER_NODEGROUP
+              value: {{ .Values.aws.workerNodegroup }}
+            - name: MAX_CLUSTER_SIZE
+              value: {{ .Values.maxClusterSize | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Chart.Name }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      imagePullSecrets:
+        - name: {{ .Values.jfrog.dockerSecretName }}

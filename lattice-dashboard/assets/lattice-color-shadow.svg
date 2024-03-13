@@ -1,0 +1,25 @@
+<svg width="130" height="132" viewBox="0 0 130 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_1_44)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M26.5846 1C30.9349 1 34.4615 4.52662 34.4615 8.87692V19.7077H93.5385V8.87692C93.5385 4.52662 97.0651 1 101.415 1C105.766 1 109.292 4.52662 109.292 8.87692V19.7077H120.123C124.473 19.7077 128 23.2343 128 27.5846C128 31.9349 124.473 35.4615 120.123 35.4615H109.292V94.5385H120.123C124.473 94.5385 128 98.0651 128 102.415C128 106.766 124.473 110.292 120.123 110.292H109.292V121.123C109.292 125.473 105.766 129 101.415 129C97.0651 129 93.5385 125.473 93.5385 121.123V110.292H34.4615V121.123C34.4615 125.473 30.9349 129 26.5846 129C22.2343 129 18.7077 125.473 18.7077 121.123V110.292H7.87692C3.52662 110.292 0 106.766 0 102.415C0 98.0651 3.52662 94.5385 7.87692 94.5385H18.7077V35.4615H7.87692C3.52662 35.4615 0 31.9349 0 27.5846C0 23.2343 3.52662 19.7077 7.87692 19.7077H18.7077V8.87692C18.7077 4.52662 22.2343 1 26.5846 1ZM34.4615 35.4615V94.5385H93.5385V35.4615H34.4615Z" fill="url(#paint0_linear_1_44)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M50.0363 47.5455H77.9636C79.8917 47.5455 81.4545 49.1084 81.4545 51.0364V78.9636C81.4545 80.8918 79.8917 82.4545 77.9636 82.4545H50.0363C48.1084 82.4545 46.5454 80.8918 46.5454 78.9636V51.0364C46.5454 49.1084 48.1084 47.5455 50.0363 47.5455Z" fill="url(#paint1_linear_1_44)"/>
+</g>
+<defs>
+<filter id="filter0_d_1_44" x="-2" y="0" width="132" height="132" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0627451 0 0 0 0 0.113725 0 0 0 0 0.176471 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_44"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_44" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_1_44" x1="4.63211" y1="0.999853" x2="131.122" y2="4.58759" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2174EA"/>
+<stop offset="1" stop-color="#21BAEA"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1_44" x1="4.63211" y1="0.999853" x2="131.122" y2="4.58759" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2174EA"/>
+<stop offset="1" stop-color="#21BAEA"/>
+</linearGradient>
+</defs>
+</svg>

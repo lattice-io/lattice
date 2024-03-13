@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-latticedocs-dev-193426-authRole",
+      "UnauthRoleArn": "arn:aws:iam::336529284642:role/amplify-latticedocs-dev-193426-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::336529284642:role/amplify-latticedocs-dev-193426-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-latticedocs-dev-193426-deployment",
+      "UnauthRoleName": "amplify-latticedocs-dev-193426-unauthRole",
+      "StackName": "amplify-latticedocs-dev-193426",
+      "StackId": "arn:aws:cloudformation:us-east-1:336529284642:stack/amplify-latticedocs-dev-193426/8cf303c0-d8da-11ed-9c3f-124e8751457b",
+      "AmplifyAppId": "d2rqau4mrsvgxn"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2rqau4mrsvgxn",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}

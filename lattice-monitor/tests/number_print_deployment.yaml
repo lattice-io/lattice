@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-lattice
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: number-printer
+  namespace: test-lattice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: number-printer
+  template:
+    metadata:
+      labels:
+        app: number-printer
+    spec:
+      containers:
+        - name: number-printer
+          image: busybox
+          command: ['sh', '-c', 'i=0; while true; do echo $i; i=$((i+1)); sleep 1; done']

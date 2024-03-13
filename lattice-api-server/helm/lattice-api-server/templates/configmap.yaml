@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+data:
+  DJANGO_ALLOWED_HOSTS: {{ .Values.configMap.allowedHosts | quote }}
+  DEBUG: {{ .Values.configMap.debug | quote }}
+  LATTICE_NAMESPACE: {{ .Release.Namespace | quote }}
+  

@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: lattice-client
+spec:
+  template:
+    metadata:
+      name: lattice-client-worker
+    spec:
+      containers:
+      - name: lattice-client
+        image: lattice-checkpoint-client
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash", "-c"]
+        args: ["python -u client.py --endpoint lattice-checkpoint-svc"]
+      restartPolicy: Never

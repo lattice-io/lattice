@@ -1,0 +1,6 @@
+{{- if not (lookup "v1" "Namespace" "" (.Values.monitorNamespace | default .Release.Namespace)) }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.monitorNamespace | default .Release.Namespace }}
+{{- end }}

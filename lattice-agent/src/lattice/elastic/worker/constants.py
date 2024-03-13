@@ -1,0 +1,4 @@
+NO_FRAMEWORK = 'generic'
+PYTORCH_JOB_FRAMEWORK = 'pytorch'
+PYTORCH_LIGHTNING_JOB_FRAMEWORK = 'pytorch_lightning'
+TENSORFLOW_JOB_FRAMEWORK = 'tensorflow'

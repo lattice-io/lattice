@@ -1,0 +1,15 @@
+{%- extends "!layout.html" %}
+
+{% block sidebartitle %}
+
+<a href="https://breezeml.ai" style="display:block">
+  <img src="{{ pathto('_static/' + logo, 1) }}" class="logo" style="width:5em" alt="{{ _('Logo') }}"/>
+</a>
+
+<a href="{{ pathto(master_doc) }}" style="display:block">
+  {{ project }} ({{ release }})
+</a>
+
+{%- include "searchbox.html" %}
+
+{% endblock %}
